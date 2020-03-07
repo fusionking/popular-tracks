@@ -26,7 +26,9 @@ class SetTokenView(GenericAPIView):
         except SpotifyException as e:
             result = e.as_dict
 
-        return Response(result, status=status.HTTP_200_OK)
+        response = Response(result, status=status.HTTP_200_OK)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
 
 
 class GetTracksView(GenericAPIView):
@@ -54,4 +56,6 @@ class GetTracksView(GenericAPIView):
         except (TracksException, SpotifyException) as e:
             result = e.as_dict
 
-        return Response(result)
+        response = Response(result, status=status.HTTP_200_OK)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response

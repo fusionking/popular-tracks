@@ -1,13 +1,35 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+  <div id="app" class="text-center">
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+      <app-home></app-home>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+import HelloWorld from './components/HelloWorld.vue';
+import axios from 'axios';
+import _ from 'lodash';
+
 export default {
-  name: 'App'
+  name: 'app',
+  data () {
+    return {
+        artistName: null,
+    }
+  },
+  components: {
+      appHome: HelloWorld,
+  },
+  methods: {
+
+  },
+  mounted () {
+    axios.post('/set-token/')
+        .then(res => {
+        })
+        .catch(error => console.log(res.error));
+  }
 }
 </script>
 
