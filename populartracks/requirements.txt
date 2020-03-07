@@ -1,0 +1,5 @@
+Django==2.2.11
+django-cors-headers==3.2.1
+djangorestframework==3.11.0
+flake8==3.7.9
+requests==2.23.0

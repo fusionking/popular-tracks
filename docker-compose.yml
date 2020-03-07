@@ -1,0 +1,33 @@
+version: "3"
+services:
+    api:
+        container_name: api
+        build:
+            context: ./populartracks
+            dockerfile: Dockerfile
+        hostname: api
+        ports:
+            - 8000:8000
+        volumes:
+            - ./populartracks:/api
+        env_file: .env
+        command: >
+            bash -c '
+            python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py createcachetable &&
+            python manage.py runserver 0.0.0.0:8000
+            '
+    web:
+        container_name: web
+        build:
+            context: ./src
+            dockerfile: Dockerfile
+        hostname: web
+        ports:
+            - 8080:8080
+        volumes:
+            - './src:/app'
+            - '/app/node_modules'
+        depends_on:
+            - api

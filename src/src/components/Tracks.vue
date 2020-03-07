@@ -1,14 +1,15 @@
 <template>
     <div class="col-md-12 text-center pb-5">
         <h1 class="heading mb-4">Most Popular Tracks of {{ artistName }}</h1>
-        <p>Availabe genres: rock, alternative rock, pop, blues, country,
+        <p>Available genres are: rock, alternative rock, pop, blues, country,
         electronic, jazz, r&b, rap, reggae</p>
         <input v-model="genreName" placeholder="Type a genre name here:">
-        <button @click="searchArtist" class="mb-4">Search For Artist Tracks</button>
+        <button @click="searchArtist" class="mb-4 btn-primary">Search For Artist Tracks</button>
         <br>
         <vue-good-table
           :columns="columns"
           :rows="rows"
+          theme="black-rhino"
           >
         </vue-good-table>
     </div>
@@ -63,7 +64,7 @@ export default {
                                 artist: trackResult.artist,
                                 track: trackResult.track,
                                 imageUrl: '<img src="' +
-                                trackResult.album_image_url + '" alt="placeholder" height="80" width="80">',
+                                trackResult.album_image_url + '"alt="placeholder" height="90" width="90">',
                                 releaseDate: trackResult.release_date
                             });
                       };

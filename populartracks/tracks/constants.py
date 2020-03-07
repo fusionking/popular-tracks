@@ -57,9 +57,8 @@ SPOTIFY_CONFIG = {
 }
 
 # TODO get these from dockerfile
-CLIENT_ID = os.environ.get('CLIENT_ID', '0238a47b0fdd4c1abb0be769163508f7')
-CLIENT_SECRET = os.environ.get('CLIENT_SECRET',
-                               '4de1bcb1e61345ca8515f16068d5190e')
+CLIENT_ID = os.environ.get('CLIENT_ID')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 
 
 GENRES_FILE_PATH = 'data/genres.json'
