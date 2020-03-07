@@ -6,6 +6,7 @@
         <input v-model="genreName" placeholder="Type a genre name here:">
         <button @click="searchArtist" class="mb-4 btn-primary">Search For Artist Tracks</button>
         <br>
+        <p v-if="loading">Loading...</p>
         <vue-good-table
           :columns="columns"
           :rows="rows"
@@ -34,7 +35,8 @@ export default {
         rows: [],
         artistName: null,
         genreName: null,
-        error: null
+        error: null,
+        loading: false
       }
     },
     components: {
@@ -43,6 +45,7 @@ export default {
     methods: {
         searchArtist: function() {
             let currentObj = this;
+            currentObj.loading = true;
             let newRows = [];
             axios
                 .get('tracks/' + this.genreName + '/')
@@ -68,7 +71,9 @@ export default {
                                 releaseDate: trackResult.release_date
                             });
                       };
-                      currentObj.rows = newRows;}
+                      currentObj.rows = newRows;
+                    }
+                    currentObj.loading = false;
                 })
         }
     }

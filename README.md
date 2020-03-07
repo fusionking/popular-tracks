@@ -15,7 +15,7 @@ Contains the Vue application. The components are located under *./src/components
 
 ### How to run
 The frontend and the backend components both have isolated Dockerfile's and there is a main docker-compose.yml file which exposes them as containerized services. 
-You can start the whole application with this single command, which create the images and boots the conainers:
+You can start the whole application with this single command, which creates the images and boots the containers:
 
 ```
 docker-compose up -d --build
@@ -32,7 +32,7 @@ The *tracks/<genre>* endpoint accesses the *genres.json* file and gets a random 
 Then, a GET request is sent to *https://api.spotify.com/v1/search?q=(artistName)&type=artist*
 The response contains all matching artists as a list sorted by popularity. The first record is selected since it is the most relevant search result, and the artist URL is fetched.
 This is required since this is the only way to get the artist's SPOTIFY ID.
-The url looks like this: *https://api.spotify.com/v1/artists/08td7MxkoHQkXnWAYD8d6Q/
+The url looks like this: *https://api.spotify.com/v1/artists/08td7MxkoHQkXnWAYD8d6Q/*
 Then the *top-tracks* endpoint is called and the response is serialized.
 
 ### Third Party Packages

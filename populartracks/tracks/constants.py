@@ -56,9 +56,7 @@ SPOTIFY_CONFIG = {
     'tracks': '{}/top-tracks',
 }
 
-# TODO get these from dockerfile
 CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-
 
 GENRES_FILE_PATH = 'data/genres.json'

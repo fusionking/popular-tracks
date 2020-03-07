@@ -1,4 +1,4 @@
-from rest_framework import serializers, status
+from rest_framework import serializers
 
 
 class ArtistSerializer(serializers.Serializer):
@@ -16,7 +16,6 @@ class TracksSerializer(serializers.Serializer):
     album = AlbumSerializer()
 
     def to_representation(self, track):
-        # TODO implement
         artist = track['artists'][0]['name']
         track_name = track['name']
         album_image_url = track['album']['images'][0]['url']

@@ -41,7 +41,6 @@ class GetTracksView(GenericAPIView):
         try:
             random_artist = get_random_artist(genres, genre)
             popular_tracks, status_code = get_popular_tracks(random_artist)
-            # further processing
             serializer = self.get_serializer(data=popular_tracks[:5],
                                              many=True)
             serializer.is_valid(raise_exception=True)

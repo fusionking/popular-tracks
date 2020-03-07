@@ -16,12 +16,31 @@ from tracks.exc import TracksException
 
 
 def get_genres():
+    """
+    Gets the genres file from local file system.
+
+    Returns:
+        The genres file as a python dictionary.
+    """
     with open(GENRES_FILE_PATH) as genres_file:
         genres = json.load(genres_file)
     return genres
 
 
 def get_random_artist(genres, genre):
+    """
+    Gets a random artist from a genre's artist list.
+
+    Args:
+        genres: A dictionary of genres to artist lists.
+        genre: A string of a specific genre.
+
+    Returns:
+        A random artist name string.
+    Raises:
+        TracksException: Raised if the genre is not found.
+
+    """
     artists = genres.get(genre)
     if not artists:
         message = SERVICE_CODES.get(GENRE_NOT_FOUND, {}).get(
@@ -33,6 +52,31 @@ def get_random_artist(genres, genre):
 
 
 def get_artist_url(response):
+    """
+    Gets an artist url from an artist dictionary.
+
+    Args:
+        response: A search result response
+
+        Example:
+            {
+              "artists": {
+              "items": [ {
+              "genres": [ ],
+              "href": "https://api.spotify.com/v1/artists/08td7MxkoHQkXnWAYD",
+              "id": "08td7MxkoHQkXnWAYD8d6Q",
+              "type": "artist",
+              "uri": "spotify:artist:08td7MxkoHQkXnWAYD8d6Q"
+              } ],
+            }
+           }
+
+    Returns:
+        artist_url: The href component of the response.
+
+    Raises:
+        TracksException: Raised if no artist is found.
+    """
     items = response['artists']['items']
     artist_url = items[0]['href'] if items else None
     if not artist_url:
@@ -43,6 +87,15 @@ def get_artist_url(response):
 
 
 def set_new_access_token():
+    """
+    Gets an access token from the Spotify API and sets the cache value.
+
+    Returns:
+        access_token, status_code tuple
+
+    Raises:
+        SpotifyException: Raised if an error is returned from the external API.
+    """
     access_token = cache.get('access_token')
     status_code = None
     if not access_token:
@@ -60,7 +113,19 @@ def set_new_access_token():
     return access_token, status_code
 
 
-def get_artist_search_results(artist, access_token=None):
+def get_artist_search_results(artist):
+    """
+    Searches the artist with the given name from the Spotify API.
+
+    Args:
+        artist: The artist name
+
+    Returns:
+        response, status_code tuple. Response is a dictionary.
+
+    Raises:
+        SpotifyException: Raised if an error is returned from the external API.
+    """
     access_token = cache.get('access_token')
     if not access_token:
         access_token = set_new_access_token()
@@ -75,14 +140,23 @@ def get_artist_search_results(artist, access_token=None):
 
 
 def get_popular_tracks(artist):
-    # Try to get the access token from cache
+    """
+    Gets an artist's popular tracks from the Spotify API.
+
+    Args:
+        artist: The artist name
+
+    Returns:
+        response, status_code tuple. Response is a dictionary.
+
+    Raises:
+        SpotifyException: Raised if an error is returned from the external API.
+    """
     access_token = cache.get('access_token')
     if not access_token:
         access_token = set_new_access_token()
 
-    search_results, status_code = get_artist_search_results(
-        artist, access_token
-    )
+    search_results, status_code = get_artist_search_results(artist)
 
     artist_url = get_artist_url(search_results)
     tracks_url = SPOTIFY_CONFIG.get('tracks').format(artist_url)
