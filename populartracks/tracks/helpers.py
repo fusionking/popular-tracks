@@ -43,16 +43,19 @@ def get_artist_url(response):
 
 
 def set_new_access_token():
-    url = SPOTIFY_CONFIG.get('accounts')
-    post_data = {'grant_type': 'client_credentials'}
-    response, status_code = _request(
-        url, data=post_data, service_name='accounts',
-        auth=(CLIENT_ID, CLIENT_SECRET), method=settings.METHOD_POST
-    )
+    access_token = cache.get('access_token')
+    status_code = None
+    if not access_token:
+        url = SPOTIFY_CONFIG.get('accounts')
+        post_data = {'grant_type': 'client_credentials'}
+        response, status_code = _request(
+            url, data=post_data, service_name='accounts',
+            auth=(CLIENT_ID, CLIENT_SECRET), method=settings.METHOD_POST
+        )
 
-    access_token = response['access_token']
-    timeout = response['expires_in']
-    cache.set('access_token', access_token, timeout=timeout)
+        access_token = response['access_token']
+        timeout = response['expires_in']
+        cache.set('access_token', access_token, timeout=timeout)
 
     return access_token, status_code
 
