@@ -2,22 +2,29 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from tracks.constants import (DEFAULT_SUCCESS, SERVICE_CODES)
 from tracks.serializers import TracksSerializer
 from tracks.helpers import (
     set_new_access_token, get_genres, get_random_artist,
     get_popular_tracks
 )
+from tracks.exc import TracksException, SpotifyException
 
 
-class GetTokenView(GenericAPIView):
-    def get(self, request):
-        access_token = set_new_access_token()
-        if access_token:
-            result = {'message': 'Access token is set successfully.'}
-        else:
-            result = {'message': (
-                'There was an error in settings the access token'
-            )}
+class SetTokenView(GenericAPIView):
+    def post(self, request):
+        try:
+            access_token, status_code = set_new_access_token()
+            # We are sure that the access token is set
+            message = SERVICE_CODES.get(status_code, {}).get(
+                'accounts', DEFAULT_SUCCESS
+            )
+            result = {
+                'code': status_code,
+                'message': message
+            }
+        except SpotifyException as e:
+            result = e.as_dict
 
         return Response(result, status=status.HTTP_200_OK)
 
@@ -27,15 +34,24 @@ class GetTracksView(GenericAPIView):
 
     def get(self, request, genre):
         genres = get_genres()
-        random_artist = get_random_artist(genres, genre)
-        if random_artist:
-            popular_tracks = get_popular_tracks(random_artist) or []
+        result = {}
+
+        try:
+            random_artist = get_random_artist(genres, genre)
+            popular_tracks, status_code = get_popular_tracks(random_artist)
             # further processing
             serializer = self.get_serializer(data=popular_tracks[:5],
                                              many=True)
             serializer.is_valid(raise_exception=True)
-            result = serializer.data
-        else:
-            result = {'error': 'The provided genre could not be found'}
-        # TODO return 400
+            message = SERVICE_CODES.get(status_code, {}).get(
+                'tracks', DEFAULT_SUCCESS
+            )
+            result = {
+                'code': status_code,
+                'message': message,
+                'result': serializer.data
+            }
+        except (TracksException, SpotifyException) as e:
+            result = e.as_dict
+
         return Response(result)
